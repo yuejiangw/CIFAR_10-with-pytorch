@@ -2,7 +2,6 @@ import torch as t
 from torch.autograd import Variable
 import torchvision as tv 
 from dataset import test_loader
-from model import LeNet
 
 class Tester():
     def __init__(self, test_loader, net):
