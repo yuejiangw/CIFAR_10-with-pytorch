@@ -1,7 +1,8 @@
 from train import Trainer
 from test import Tester 
 from model import LeNet
-from dataset import DataSet, transform, train_set, train_loader, test_set, test_loader
+from dataset import DataSet, DataBuilder 
+# transform, train_set, train_loader, test_set, test_loader
 
 import torch as t 
 import torch.nn as nn 
@@ -16,7 +17,10 @@ def main(args):
     # CIFAR-10的全部类别，一共10类
     classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
     # 数据集
-    dataSet = DataSet(transform, train_set, train_loader, test_set, test_loader, classes)
+    # dataSet = DataSet(transform, train_set, train_loader, test_set, test_loader, classes)
+    data_builder = DataBuilder(args)
+    dataSet = DataSet(data_builder.train_builder(), data_builder.test_builder(), classes)
+    
     # 网络结构
     net = LeNet()
     # 交叉熵损失函数
@@ -45,11 +49,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # 超参数
-    parser.add_argument('--seed', type=int, default=42, help="random seed for initialization")
+    parser.add_argument("--num_workers", default=0, type=int, help="Thread number for training.")
+    parser.add_argument("--is_download", default=True, type=bool, help="Download the datasets if there is no data.")
+
     parser.add_argument("--batch_size", default=4, type=int, help="Batch size for training and evaluation.")
     parser.add_argument("--learning_rate", default=0.001, type=float, help="The initial learning rate for Adam.")
-    parser.add_argument("--weight_decay", default=0.0, type=float, help="Weight decay if we apply some.")
-    parser.add_argument("--adam_epsilon", default=1e-8, type=float, help="Epsilon for Adam optimizer.")
+    parser.add_argument("--adam_epsilon", default=1e-8, type=float, help="The Epsilon of Adam optimizer.")
     parser.add_argument("--max_grad_norm", default=1.0, type=float, help="Max gradient norm.")
     parser.add_argument("--dropout_rate", default=0.1, type=float, help="Dropout for fully-connected layers")
     parser.add_argument("--epoch", default=10, type=int, help="The number of training epochs.")
@@ -63,7 +68,6 @@ if __name__ == "__main__":
     parser.add_argument("--do_train", action="store_true", help="Whether to run training.")
     parser.add_argument("--do_eval", action="store_true", help="Whether to run eval on the test set.")
     parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available")
-    parser.add_argument("--is_shuffle", action="store_false", help="Whether shuffle the data samples or not.")
     
     args = parser.parse_args()
     main(args)

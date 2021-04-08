@@ -1,7 +1,7 @@
 import torch as t 
 from torch.autograd import Variable
 import torchvision as tv 
-from dataset import test_loader
+from tqdm import tqdm
 
 class Tester():
     def __init__(self, test_loader, net):
@@ -11,7 +11,7 @@ class Tester():
     def test(self):
         correct = 0 # 预测正确的图片数
         total = 0   # 总共的图片数
-        for data in test_loader:
+        for data in tqdm(self.test_loader, desc="Test Iteration", ncols=70):
             images, labels = data
             outputs = self.net(Variable(images))
             _, predicted = t.max(outputs.data, 1)   # torch.max返回值为(values, indices)

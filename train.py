@@ -1,8 +1,7 @@
 from struct import pack_into
 import torch as t 
-from model import LeNet 
 from torch.autograd import Variable
-from tqdm import tqdm, trange
+from tqdm import tqdm
 
 class Trainer():
     def __init__(self, net, criterion, optimizer, train_loader, args):
@@ -16,7 +15,7 @@ class Trainer():
         for epoch in range(epochs):
             print("\n******** Epoch %d / %d ********\n" % (epoch + 1, epochs))
             running_loss = 0.0
-            epoch_iterator = tqdm(self.train_loader, desc="Iteration", ncols=70)
+            epoch_iterator = tqdm(self.train_loader, desc="Train Iteration", ncols=70)
             for i, data in enumerate(epoch_iterator):
                 # 输入数据
                 inputs, labels = data
