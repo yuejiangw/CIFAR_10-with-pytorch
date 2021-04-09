@@ -1,13 +1,11 @@
 import torchvision as tv 
 import torch as t 
 import torchvision.transforms as transforms
-from torchvision.transforms import ToPILImage
-
-
-# # 可以将Tensor转换成PIL图像，可视化
-# show = ToPILImage()
 
 class DataSet():
+    '''
+    封装待使用的数据集
+    '''
     def __init__(self, train_loader, test_loader, classes):
         self.train_loader = train_loader
         self.test_loader = test_loader
@@ -15,6 +13,9 @@ class DataSet():
 
 
 class DataBuilder():
+    '''
+    构造训练集、测试集
+    '''
     def __init__(self, args) -> None:
         self.args = args
     
@@ -26,10 +27,10 @@ class DataBuilder():
         ])
         return transform
     
+    # 构造训练集
     def train_builder(self):
-        # 训练集
         train_set = tv.datasets.CIFAR10(
-            root='./data/',
+            root=self.args.data_path,
             train=True,
             download=self.args.is_download,
             transform=self.transform_builder()
@@ -43,16 +44,15 @@ class DataBuilder():
         )
         return train_loader
     
+    # 构造测试集
     def test_builder(self):
-        # 测试集
         test_set = tv.datasets.CIFAR10(
-            root='./data/',
+            root=self.args.data_path,
             train=False,
             download=self.args.is_download,
             transform=self.transform_builder()
         )
 
-        # 由测试集创建对应的DataLoader
         test_loader = t.utils.data.DataLoader(
             test_set,
             batch_size=self.args.batch_size,

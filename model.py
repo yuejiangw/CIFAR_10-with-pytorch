@@ -29,7 +29,7 @@ class LeNet(nn.Module):
         x = self.fc3(x)
         return x 
 
-class VGG16(nn.Module):
+class VGG_16(nn.Module):
     def __init__(self, num_classes):
         super().__init__()
         self.num_classes = num_classes

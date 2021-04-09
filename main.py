@@ -64,7 +64,8 @@ if __name__ == "__main__":
     parser.add_argument("--num_workers", default=0, type=int, help="Thread number for training.")
     parser.add_argument("--is_download", default=True, type=bool, help="Download the datasets if there is no data.")
 
-    # 模型路径
+    # 路径
+    parser.add_argument("--data_path", default="./data", type=str, help="The directory of the CIFAR-10 data.")
     parser.add_argument("--model_path", default="./model", type=str, help="The directory of the saved model.")
     parser.add_argument("--model_name", default="state_dict", type=str, help="The name of the saved model's parameters.")
 
