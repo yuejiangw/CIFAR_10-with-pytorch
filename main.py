@@ -1,6 +1,6 @@
 from train import Trainer
 from test import Tester 
-from model import LeNet
+from model import LeNet, VGG_16, Vgg16_Net
 from dataset import DataSet, DataBuilder 
 
 import torch as t 
@@ -23,6 +23,8 @@ def main(args):
     
     # 网络结构
     net = LeNet()
+    net2 = VGG_16(10)
+    net3 = Vgg16_Net()
     
     # 交叉熵损失函数
     criterion = nn.CrossEntropyLoss()
@@ -41,11 +43,11 @@ def main(args):
 
     # 启动训练
     if args.do_train:
-        trainer = Trainer(net, criterion, optimizer, dataSet.train_loader, args)
+        trainer = Trainer(net3, criterion, optimizer, dataSet.train_loader, args)
         trainer.train(epochs=args.epoch)
-        t.save(net.state_dict(), model_path)
+        t.save(net3.state_dict(), model_path)
     
-    # 启动测试
+    # 使用已保存的模型进行测试
     if args.do_eval:
         if os.listdir(model_path) == []:
             print("Sorry, there's no saved model yet, you need to train first.")
