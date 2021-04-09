@@ -53,7 +53,7 @@ def main(args):
         model = LeNet()
         model.load_state_dict(t.load(model_path))
         model.eval()
-        tester = Tester(dataSet.test_loader, model, args)
+        tester = Tester(dataSet.test_loader, net3, args)
         tester.test()
 
 
@@ -72,6 +72,7 @@ if __name__ == "__main__":
     # 训练相关
     parser.add_argument("--batch_size", default=4, type=int, help="Batch size for training and evaluation.")
     parser.add_argument("--epoch", default=10, type=int, help="The number of training epochs.")
+    parser.add_argument("--seed", default=42, type=int, help="The random seed used for initialization.")
     
     # 超参数
     parser.add_argument("--learning_rate", default=0.001, type=float, help="The initial learning rate for Adam.")
@@ -82,10 +83,10 @@ if __name__ == "__main__":
     parser.add_argument("--max_grad_norm", default=1.0, type=float, help="Max gradient norm.")
     parser.add_argument("--dropout_rate", default=0.1, type=float, help="Dropout for fully-connected layers")
 
-    # 采取的动作
+    # 命令
     parser.add_argument("--do_train", action="store_true", help="Whether to run training.")
     parser.add_argument("--do_eval", action="store_true", help="Whether to run eval on the test set.")
-    parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available")
+    parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available.")
     
     args = parser.parse_args()
     main(args)
