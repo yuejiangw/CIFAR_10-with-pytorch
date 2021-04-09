@@ -5,9 +5,7 @@ from dataset import DataSet, DataBuilder
 
 import torch as t 
 import torch.nn as nn 
-import torchvision as tv 
 from torch import optim
-from torch.autograd import Variable
 import argparse
 import os
 
@@ -55,7 +53,7 @@ def main(args):
         model = LeNet()
         model.load_state_dict(t.load(model_path))
         model.eval()
-        tester = Tester(dataSet.test_loader, model)
+        tester = Tester(dataSet.test_loader, model, args)
         tester.test()
 
 

@@ -4,15 +4,19 @@ import torchvision as tv
 from tqdm import tqdm
 
 class Tester():
-    def __init__(self, test_loader, net):
+    def __init__(self, test_loader, net, args):
         self.test_loader = test_loader
         self.net = net
+        self.device = "cuda" if t.cuda.is_available() and not args.no_cuda else "cpu"
+        self.net.to(self.device)
 
     def test(self):
         correct = 0 # 预测正确的图片数
         total = 0   # 总共的图片数
         for data in tqdm(self.test_loader, desc="Test Iteration", ncols=70):
             images, labels = data
+            images, labels = images.to(self.device), labels.to(self.device)
+
             outputs = self.net(Variable(images))
             _, predicted = t.max(outputs.data, 1)   # torch.max返回值为(values, indices)
             total += labels.size(0)
