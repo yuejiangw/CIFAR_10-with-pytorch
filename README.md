@@ -10,6 +10,7 @@
 * PIL
 * tqdm
 * argparse
+* streamlit
 
 
 
@@ -31,7 +32,7 @@ python ./main.py --do_train
 
 测试：
 
-```
+```python
 python ./main.py --do_eval
 ```
 
@@ -39,7 +40,7 @@ python ./main.py --do_eval
 
 预测：
 
-```
+```python
 python ./main.py --do_predict
 ```
 
