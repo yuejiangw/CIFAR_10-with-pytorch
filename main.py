@@ -48,13 +48,18 @@ def main(args):
     
     # 使用已保存的模型进行测试
     if args.do_eval:
-        if not os.path.exists(model_path):
-            print("Sorry, there's no saved model yet, you need to train first.")
-            return
-        model = LeNet()
-        model.load_state_dict(t.load(model_path))
-        model.eval()
-        tester = Tester(dataSet.test_loader, net, args)
+        if args.do_train:
+            print("Using trained model:")
+            model = net
+        else:
+            if not os.path.exists(model_path):
+                print("Sorry, there's no saved model yet, you need to train first.")
+                return
+            print("USing saved model:")
+            model = LeNet()
+            model.load_state_dict(t.load(model_path))
+            model.eval()
+        tester = Tester(dataSet.test_loader, model, args)
         tester.test()
     
     if args.show_model:

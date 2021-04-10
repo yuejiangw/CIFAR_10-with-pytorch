@@ -11,7 +11,7 @@ class Trainer():
         self.optimizer = optimizer
         self.train_loader = train_loader
         self.args = args
-        self.device = "cuda" if t.cuda.is_available() and not args.no_cuda else "cpu"
+        self.device = t.device("cuda:0" if t.cuda.is_available() and not args.no_cuda else "cpu")
         self.net.to(self.device)
 
     def train(self, epochs):
@@ -23,7 +23,7 @@ class Trainer():
 
                 # 输入数据
                 inputs, labels = data
-                # inputs, labels = Variable(inputs), Variable(labels)
+                inputs, labels = Variable(inputs), Variable(labels)
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
 
 

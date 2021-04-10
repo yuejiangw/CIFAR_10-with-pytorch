@@ -40,7 +40,7 @@ def set_seed(args):
 
 def show_model(args):
     model_path = os.path.join(args.model_path, args.model_name)
-    device = "cuda" if t.cuda.is_available() and not args.no_cuda else "cpu"
+    device = t.device("cuda:0" if t.cuda.is_available() and not args.no_cuda else "cpu")
     net = t.load(model_path, map_location=t.device(device))
     print(type(net))
     print(len(net))
