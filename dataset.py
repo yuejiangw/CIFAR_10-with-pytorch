@@ -49,7 +49,7 @@ class DataBuilder():
             root=self.args.data_path,
             train=True,
             download=self.args.is_download,
-            transform=self.transform_builder()
+            transform=self.train_transform()
         )
 
         train_loader = t.utils.data.DataLoader(
@@ -66,7 +66,7 @@ class DataBuilder():
             root=self.args.data_path,
             train=False,
             download=self.args.is_download,
-            transform=self.transform_builder()
+            transform=self.test_transform()
         )
 
         test_loader = t.utils.data.DataLoader(

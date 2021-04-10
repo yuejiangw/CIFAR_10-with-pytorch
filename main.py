@@ -25,8 +25,8 @@ def main(args):
     dataSet = DataSet(data_builder.train_builder(), data_builder.test_builder(), classes)
     
     # 网络结构
-    net = LeNet()
-    # net = Vgg16_Net()
+    # net = LeNet()
+    net = Vgg16_Net()
     
     # 交叉熵损失函数
     criterion = nn.CrossEntropyLoss()
