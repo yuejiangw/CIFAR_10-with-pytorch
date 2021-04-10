@@ -70,13 +70,15 @@ def main(args):
         show_model(args)
     
     if args.do_predict:
-        net.load_state_dict(t.load(model_path))
+        device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
+        net.load_state_dict(t.load(model_path, map_location=device))
         predictor = Predictor(net, classes)
-        img_path = 'test'
-        img_name = [os.path.join(img_path, x) for x in os.listdir(img_path)]
-        for img in img_name:
-            predictor.predict(img)
-
+        # img_path = 'test'
+        # img_name = [os.path.join(img_path, x) for x in os.listdir(img_path)]
+        # for img in img_name:
+        #     predictor.predict(img)
+        img_path = 'test/cat0.jpg'
+        predictor.predict(img_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
