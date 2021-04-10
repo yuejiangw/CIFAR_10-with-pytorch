@@ -71,7 +71,7 @@ def main(args):
     
     if args.do_predict:
         net.load_state_dict(t.load(model_path))
-        predictor = Predictor(net, classes, args)
+        predictor = Predictor(net, classes)
         img_path = 'test'
         img_name = [os.path.join(img_path, x) for x in os.listdir(img_path)]
         for img in img_name:

@@ -1,16 +1,13 @@
 import torch as t 
 from torch.autograd import Variable
-import torchvision as tv
-from torchvision.transforms.transforms import Normalize, Resize 
-from tqdm import tqdm
 import torchvision.transforms as transforms
 from PIL import Image
 
 class Predictor():
-    def __init__(self, net, classes, args):
+    def __init__(self, net, classes):
         self.net = net
         self.classes = classes
-        self.device = t.device("cuda:0" if t.cuda.is_available() and not args.no_cuda else "cpu")
+        self.device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
         self.net.to(self.device)
     
     def predict_transform(self):
@@ -28,9 +25,7 @@ class Predictor():
         
         img = Image.open(img_path)
         img_tensor = transform(img).to(self.device)
-        # print(img_tensor.shape)
         img_tensor = Variable(t.unsqueeze(img_tensor, 0).float(), requires_grad=False)
-        # print(img_tensor.shape)
 
         with t.no_grad():
             self.net.eval()
@@ -38,3 +33,4 @@ class Predictor():
             _, predicted = t.max(output, 1)
             print("下标: ", predicted)
             print("标签: ", self.classes[predicted])
+            return predicted
