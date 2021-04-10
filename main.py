@@ -1,17 +1,21 @@
+from predict import Predictor
 from train import Trainer
 from test import Tester 
 from model import LeNet, VGG_16, Vgg16_Net
 from dataset import DataSet, DataBuilder 
-from util import show_model
+from util import check_path, show_model
 
 import torch as t 
 import torch.nn as nn 
 from torch import optim
 import argparse
 import os
+from PIL import Image
 
 
 def main(args):
+
+    check_path(args)
 
     # CIFAR-10的全部类别，一共10类
     classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
@@ -22,8 +26,7 @@ def main(args):
     
     # 网络结构
     net = LeNet()
-    net2 = VGG_16(10)
-    net3 = Vgg16_Net()
+    # net = Vgg16_Net()
     
     # 交叉熵损失函数
     criterion = nn.CrossEntropyLoss()
@@ -46,20 +49,18 @@ def main(args):
         trainer.train(epochs=args.epoch)
         t.save(net.state_dict(), model_path)
     
-    # 使用已保存的模型进行测试
+    # 启动测试
     if args.do_eval:
         if args.do_train:
             print("Using trained model:")
-            model = net
         else:
             if not os.path.exists(model_path):
                 print("Sorry, there's no saved model yet, you need to train first.")
                 return
             print("USing saved model:")
-            model = LeNet()
-            model.load_state_dict(t.load(model_path))
-            model.eval()
-        tester = Tester(dataSet.test_loader, model, args)
+            net.load_state_dict(t.load(model_path))
+        # net.eval()
+        tester = Tester(dataSet.test_loader, net, args)
         tester.test()
     
     if args.show_model:
@@ -67,6 +68,14 @@ def main(args):
             print("Sorry, there's no saved model yet, you need to train first.")
             return
         show_model(args)
+    
+    if args.do_predict:
+        net.load_state_dict(t.load(model_path))
+        predictor = Predictor(net, classes, args)
+        img_path = 'test'
+        img_name = [os.path.join(img_path, x) for x in os.listdir(img_path)]
+        for img in img_name:
+            predictor.predict(img)
 
 
 if __name__ == "__main__":
@@ -93,11 +102,11 @@ if __name__ == "__main__":
     
     parser.add_argument("--adam_epsilon", default=1e-8, type=float, help="The Epsilon of Adam optimizer.")
     parser.add_argument("--max_grad_norm", default=1.0, type=float, help="Max gradient norm.")
-    parser.add_argument("--dropout_rate", default=0.1, type=float, help="Dropout for fully-connected layers")
 
     # 命令
     parser.add_argument("--do_train", action="store_true", help="Whether to run training.")
     parser.add_argument("--do_eval", action="store_true", help="Whether to run eval on the test set.")
+    parser.add_argument("--do_predict", action="store_true", help="Predict single image with the saved model.")
     parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available.")
     parser.add_argument("--show_model", action="store_true", help="Display the state dict of the model.")
     

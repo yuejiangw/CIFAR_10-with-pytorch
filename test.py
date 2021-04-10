@@ -13,6 +13,7 @@ class Tester():
     def test(self):
         correct = 0 # 预测正确的图片数
         total = 0   # 总共的图片数
+        self.net.eval()
         for data in tqdm(self.test_loader, desc="Test Iteration", ncols=70):
             images, labels = data
             images, labels = images.to(self.device), labels.to(self.device)
@@ -22,4 +23,6 @@ class Tester():
             total += labels.size(0)
             correct += (predicted == labels).sum()
         print('10000张测试集中的准确率为: %d %%' % (100 * correct / total))
-
+    
+    def predict(self):
+        pass

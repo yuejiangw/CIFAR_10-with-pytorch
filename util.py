@@ -22,11 +22,15 @@ def init_logger():
     )
 
 def check_path(args):
+    print("Start checking path...")
     if not os.path.exists(args.data_path):
+        print("Creating data path...")
         os.makedirs(args.data_path)
 
     if not os.path.exists(args.model_path):
+        print("Creating model path...")
         os.makedirs(args.model_path)
+    print("Check path done.")
 
 def set_seed(args):
     """

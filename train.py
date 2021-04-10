@@ -1,6 +1,4 @@
-from struct import pack_into
 import torch as t
-# from torch._C import device 
 from torch.autograd import Variable
 from tqdm import tqdm
 

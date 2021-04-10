@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F 
 
 class LeNet(nn.Module):
-    """ 网络模型选用的是比较简单的LeNet模型 """
+    """ LeNet """
     def __init__(self):
         super(LeNet, self).__init__()
         # 卷积层1
@@ -30,6 +30,7 @@ class LeNet(nn.Module):
         return x 
 
 class VGG_16(nn.Module):
+    """ VGG-16 """
     def __init__(self, num_classes):
         super().__init__()
         self.num_classes = num_classes
@@ -104,19 +105,20 @@ class VGG_16(nn.Module):
 class Vgg16_Net(nn.Module):
     def __init__(self):
         super(Vgg16_Net, self).__init__()
+
         #2个卷积层和1个最大池化层
         self.layer1 = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size = 3, stride=1, padding=1),             # (32-3+2)/1+1 = 32  32*32*64
+            nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),             # (32-3+2)/1+1 = 32  32*32*64
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             
-            nn.Conv2d(64,64, kernel_size = 3, stride=1, padding=1),             # (32-3+2)/1+1 = 32  32*32*64
+            nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),             # (32-3+2)/1+1 = 32  32*32*64
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             
-            nn.MaxPool2d(2, 2)                                                  # (32-2)/2+1 = 16    16*16*64
-            
-            )
+            nn.MaxPool2d(2, 2)                                                  # (32-2)/2+1 = 16    16*16*64    
+        )
+        
         #2个卷积层和1个最大池化层
         self.layer2 = nn.Sequential(
             nn.Conv2d(64, 128, kernel_size = 3, stride=1, padding=1),           # (16-3+2)/1+1 = 16  16*16*128
