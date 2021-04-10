@@ -1,6 +1,6 @@
 from struct import pack_into
 import torch as t
-from torch._C import device 
+# from torch._C import device 
 from torch.autograd import Variable
 from tqdm import tqdm
 
@@ -23,7 +23,7 @@ class Trainer():
 
                 # 输入数据
                 inputs, labels = data
-                inputs, labels = Variable(inputs), Variable(labels)
+                # inputs, labels = Variable(inputs), Variable(labels)
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
 
 
@@ -43,5 +43,5 @@ class Trainer():
                 if i % 2000 == 1999:
                     print('[%d, %5d] loss: %3f' % (epoch + 1, i + 1, running_loss / 2000))
                     running_loss = 0.0
-            print('\nEpoch {} finish, loss: {}\n'.format(epoch + 1, running_loss / (i + 1)))
+            # print('\nEpoch {} finish, loss: {}\n'.format(epoch + 1, running_loss / (i + 1)))
         print('\nFinish training\n')               

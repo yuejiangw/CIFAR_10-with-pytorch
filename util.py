@@ -37,3 +37,12 @@ def set_seed(args):
     t.manual_seed(args.seed)
     if not args.no_cuda and t.cuda.is_available():
         t.cuda.manual_seed_all(args.seed)
+
+def show_model(args):
+    model_path = os.path.join(args.model_path, args.model_name)
+    device = "cuda" if t.cuda.is_available() and not args.no_cuda else "cpu"
+    net = t.load(model_path, map_location=t.device(device))
+    print(type(net))
+    print(len(net))
+    for k in net.keys():
+        print(k)

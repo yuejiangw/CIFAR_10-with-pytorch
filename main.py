@@ -2,6 +2,7 @@ from train import Trainer
 from test import Tester 
 from model import LeNet, VGG_16, Vgg16_Net
 from dataset import DataSet, DataBuilder 
+from util import show_model
 
 import torch as t 
 import torch.nn as nn 
@@ -41,20 +42,26 @@ def main(args):
 
     # 启动训练
     if args.do_train:
-        trainer = Trainer(net3, criterion, optimizer, dataSet.train_loader, args)
+        trainer = Trainer(net, criterion, optimizer, dataSet.train_loader, args)
         trainer.train(epochs=args.epoch)
-        t.save(net3.state_dict(), model_path)
+        t.save(net.state_dict(), model_path)
     
     # 使用已保存的模型进行测试
     if args.do_eval:
-        if os.listdir(model_path) == []:
+        if not os.path.exists(model_path):
             print("Sorry, there's no saved model yet, you need to train first.")
             return
         model = LeNet()
         model.load_state_dict(t.load(model_path))
         model.eval()
-        tester = Tester(dataSet.test_loader, net3, args)
+        tester = Tester(dataSet.test_loader, net, args)
         tester.test()
+    
+    if args.show_model:
+        if not os.path.exists(model_path):
+            print("Sorry, there's no saved model yet, you need to train first.")
+            return
+        show_model(args)
 
 
 if __name__ == "__main__":
@@ -65,8 +72,8 @@ if __name__ == "__main__":
     parser.add_argument("--is_download", default=True, type=bool, help="Download the datasets if there is no data.")
 
     # 路径
-    parser.add_argument("--data_path", default="./data", type=str, help="The directory of the CIFAR-10 data.")
-    parser.add_argument("--model_path", default="./model", type=str, help="The directory of the saved model.")
+    parser.add_argument("--data_path", default="data", type=str, help="The directory of the CIFAR-10 data.")
+    parser.add_argument("--model_path", default="model", type=str, help="The directory of the saved model.")
     parser.add_argument("--model_name", default="state_dict", type=str, help="The name of the saved model's parameters.")
 
     # 训练相关
@@ -87,6 +94,7 @@ if __name__ == "__main__":
     parser.add_argument("--do_train", action="store_true", help="Whether to run training.")
     parser.add_argument("--do_eval", action="store_true", help="Whether to run eval on the test set.")
     parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available.")
+    parser.add_argument("--show_model", action="store_true", help="Display the state dict of the model.")
     
     args = parser.parse_args()
     main(args)
