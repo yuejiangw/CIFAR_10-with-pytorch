@@ -45,20 +45,18 @@ def main(args):
 
     # 启动训练
     if args.do_train:
+        print("Training...")
         trainer = Trainer(net, criterion, optimizer, dataSet.train_loader, args)
         trainer.train(epochs=args.epoch)
         t.save(net.state_dict(), model_path)
     
     # 启动测试
     if args.do_eval:
-        if args.do_train:
-            print("Using trained model:")
-        else:
-            if not os.path.exists(model_path):
-                print("Sorry, there's no saved model yet, you need to train first.")
-                return
-            print("USing saved model:")
-            net.load_state_dict(t.load(model_path))
+        if not os.path.exists(model_path):
+            print("Sorry, there's no saved model yet, you need to train first.")
+            return
+        print("Testing...")
+        net.load_state_dict(t.load(model_path))
         # net.eval()
         tester = Tester(dataSet.test_loader, net, args)
         tester.test()

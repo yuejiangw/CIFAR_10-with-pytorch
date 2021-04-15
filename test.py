@@ -13,7 +13,7 @@ class Tester():
     def test(self):
         correct = 0 # 预测正确的图片数
         total = 0   # 总共的图片数
-        self.net.eval()
+        self.net.eval() # 将net设置成eval模式
         for data in tqdm(self.test_loader, desc="Test Iteration", ncols=70):
             images, labels = data
             images, labels = images.to(self.device), labels.to(self.device)
