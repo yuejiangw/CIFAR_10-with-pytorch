@@ -1,7 +1,7 @@
 from predict import Predictor
 from train import Trainer
 from test import Tester 
-from model import LeNet, VGG_16, Vgg16_Net
+from model import LeNet, Vgg16_Net
 from dataset import DataSet, DataBuilder 
 from util import check_path, show_model
 
@@ -24,9 +24,15 @@ def main(args):
     data_builder = DataBuilder(args)
     dataSet = DataSet(data_builder.train_builder(), data_builder.test_builder(), classes)
     
-    # 网络结构
-    # net = LeNet()
-    net = Vgg16_Net()
+    # 选择模型
+    if args.lenet:
+        net = LeNet()
+        model_name = args.name_le
+    elif args.vgg:
+        net = Vgg16_Net()
+        model_name = args.name_vgg
+    elif args.resnet:
+        pass
     
     # 交叉熵损失函数
     criterion = nn.CrossEntropyLoss()
@@ -41,7 +47,7 @@ def main(args):
 
     
     # 模型的参数保存路径，默认为 "./model/state_dict"
-    model_path = os.path.join(args.model_path, args.model_name)
+    model_path = os.path.join(args.model_path, model_name)
 
     # 启动训练
     if args.do_train:
@@ -85,10 +91,14 @@ if __name__ == "__main__":
     parser.add_argument("--num_workers", default=0, type=int, help="Thread number for training.")
     parser.add_argument("--is_download", default=True, type=bool, help="Download the datasets if there is no data.")
 
-    # 路径
+    # 根目录
     parser.add_argument("--data_path", default="data", type=str, help="The directory of the CIFAR-10 data.")
     parser.add_argument("--model_path", default="model", type=str, help="The directory of the saved model.")
-    parser.add_argument("--model_name", default="state_dict", type=str, help="The name of the saved model's parameters.")
+    
+    # 模型参数文件名字
+    parser.add_argument("--name_le", default="state_dict_le", type=str, help="The name of the saved model's parameters.")
+    parser.add_argument("--name_vgg", default="state_dict_vgg", type=str, help="The name of the saved model's parameters.")
+    parser.add_argument("--name_res", default="state_dict_res", type=str, help="The name of the saved model's parameters.")
 
     # 训练相关
     parser.add_argument("--batch_size", default=4, type=int, help="Batch size for training and evaluation.")
@@ -109,6 +119,10 @@ if __name__ == "__main__":
     parser.add_argument("--do_predict", action="store_true", help="Predict single image with the saved model.")
     parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available.")
     parser.add_argument("--show_model", action="store_true", help="Display the state dict of the model.")
-    
+    parser.add_argument("--lenet", action="store_true", help="Use LeNet-5 as the model.")
+    parser.add_argument("--vgg", action="store_true", help="Use VGG-16 as the model.")
+    parser.add_argument("--resnet", action="store_true", help="Use ResNet as the model.")
+
+
     args = parser.parse_args()
     main(args)
