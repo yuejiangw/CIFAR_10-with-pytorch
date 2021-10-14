@@ -10,7 +10,6 @@ import torch.nn as nn
 from torch import optim
 import argparse
 import os
-from PIL import Image
 
 
 def main(args):
@@ -31,8 +30,8 @@ def main(args):
     elif args.vgg:
         net = Vgg16_Net()
         model_name = args.name_vgg
-    elif args.resnet:
-        pass
+    else:
+        raise "Sorry, you can only select LeNet or VGG."
     
     # 交叉熵损失函数
     criterion = nn.CrossEntropyLoss()
@@ -44,16 +43,19 @@ def main(args):
         momentum=args.sgd_momentum, 
         weight_decay=args.weight_decay
     )
-
     
     # 模型的参数保存路径，默认为 "./model/state_dict"
     model_path = os.path.join(args.model_path, model_name)
+
+    # 指定在GPU / CPU上运行程序
+    device = t.device("cuda:0" if (t.cuda.is_available() and not args.no_cuda) else "cpu")
 
     # 启动训练
     if args.do_train:
         print("Training...")
         trainer = Trainer(net, criterion, optimizer, dataSet.train_loader, args)
         trainer.train(epochs=args.epoch)
+        # 只保存模型参数
         t.save(net.state_dict(), model_path)
     
     # 启动测试
@@ -62,7 +64,8 @@ def main(args):
             print("Sorry, there's no saved model yet, you need to train first.")
             return
         print("Testing...")
-        net.load_state_dict(t.load(model_path))
+        device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
+        net.load_state_dict(t.load(model_path, map_location=device))
         # net.eval()
         tester = Tester(dataSet.test_loader, net, args)
         tester.test()
@@ -74,7 +77,6 @@ def main(args):
         show_model(args)
     
     if args.do_predict:
-        device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
         net.load_state_dict(t.load(model_path, map_location=device))
         predictor = Predictor(net, classes)
         # img_path = 'test'
@@ -98,7 +100,6 @@ if __name__ == "__main__":
     # 模型参数文件名字
     parser.add_argument("--name_le", default="state_dict_le", type=str, help="The name of the saved model's parameters.")
     parser.add_argument("--name_vgg", default="state_dict_vgg", type=str, help="The name of the saved model's parameters.")
-    parser.add_argument("--name_res", default="state_dict_res", type=str, help="The name of the saved model's parameters.")
 
     # 训练相关
     parser.add_argument("--batch_size", default=4, type=int, help="Batch size for training and evaluation.")
@@ -106,9 +107,9 @@ if __name__ == "__main__":
     parser.add_argument("--seed", default=42, type=int, help="The random seed used for initialization.")
     
     # 超参数
-    parser.add_argument("--learning_rate", default=0.001, type=float, help="The initial learning rate for Adam.")
-    parser.add_argument("--weight_decay", default=0.001, type=int, help="Weight decay of SGD optimzer.")
-    parser.add_argument("--sgd_momentum", default=0.8, type=float, help="The momentum of the SGD optimizer.")
+    parser.add_argument("--learning_rate", default=0.01, type=float, help="The initial learning rate for Adam.")
+    parser.add_argument("--weight_decay", default=5e-4, type=int, help="Weight decay of SGD optimzer.")
+    parser.add_argument("--sgd_momentum", default=0.9, type=float, help="The momentum of the SGD optimizer.")
     
     parser.add_argument("--adam_epsilon", default=1e-8, type=float, help="The Epsilon of Adam optimizer.")
     parser.add_argument("--max_grad_norm", default=1.0, type=float, help="Max gradient norm.")
@@ -121,7 +122,6 @@ if __name__ == "__main__":
     parser.add_argument("--show_model", action="store_true", help="Display the state dict of the model.")
     parser.add_argument("--lenet", action="store_true", help="Use LeNet-5 as the model.")
     parser.add_argument("--vgg", action="store_true", help="Use VGG-16 as the model.")
-    parser.add_argument("--resnet", action="store_true", help="Use ResNet as the model.")
 
 
     args = parser.parse_args()

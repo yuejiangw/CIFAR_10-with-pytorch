@@ -160,7 +160,3 @@ class Vgg16_Net(nn.Module):
         x = x.view(-1, 512)
         x = self.fc(x)
         return x
-
-
-class ResNet():
-    pass

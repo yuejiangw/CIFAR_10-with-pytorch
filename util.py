@@ -8,7 +8,7 @@ import torch as t
 import numpy as np
 
 def init_logger():
-    """将日志信息输出到控制台
+    """ 将日志信息输出到控制台
     Params:
         asctime: 打印日志的时间
         levelname: 打印日志级别
@@ -22,6 +22,7 @@ def init_logger():
     )
 
 def check_path(args):
+    """ 检查目标目录是否存在，若不存在，则新建目录 """
     print("Start checking path...")
     if not os.path.exists(args.data_path):
         print("Creating data path...")

@@ -24,7 +24,6 @@ class Trainer():
                 inputs, labels = Variable(inputs), Variable(labels)
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
 
-
                 # 梯度清零
                 self.optimizer.zero_grad()
 

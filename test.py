@@ -24,5 +24,3 @@ class Tester():
             correct += (predicted == labels).sum()
         print('10000张测试集中的准确率为: %d %%' % (100 * correct / total))
     
-    def predict(self):
-        pass
