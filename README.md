@@ -1,5 +1,7 @@
 # CIFAR_10-with-pytorch
 
+[English version](static/eng.md)
+
 ## 1 简介
 
 一个Pytorch练习，实现CIFAR-10数据集的图像分类，目前暂时实现了LeNet-5和VGG-16模型。VGG-16的测试准确率可以达到84%，程序运行状态如下所示：
@@ -14,7 +16,7 @@ Test Iteration: 100%|█████████████| 2500/2500 [01:44<0
 10000张测试集中的准确率为: 84 %
 ```
 前端页面效果如下：
-![demo](web/demo.jpg)
+![demo](static/demo.jpg)
 
 ## 2 项目依赖：
 
