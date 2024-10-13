@@ -1,4 +1,4 @@
-# CIFAR_10-with-pytorch
+# CIFAR-10 with Pytorch
 
 [English version](static/eng.md)
 
